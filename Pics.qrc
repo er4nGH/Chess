@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>Assets/Backgroundmenu.jpg</file>
+        <file>Assets/BB.png</file>
+        <file>Assets/BH.png</file>
+        <file>Assets/BK.png</file>
+        <file>Assets/board.png</file>
+        <file>Assets/BP.png</file>
+        <file>Assets/BQ.png</file>
+        <file>Assets/BR.png</file>
+        <file>Assets/gwood.jpg</file>
+        <file>Assets/Normal.png</file>
+        <file>Assets/Point.png</file>
+        <file>Assets/Vsbot.png</file>
+        <file>Assets/WB.png</file>
+        <file>Assets/WH.png</file>
+        <file>Assets/WK.png</file>
+        <file>Assets/wood.jpg</file>
+        <file>Assets/WP.png</file>
+        <file>Assets/WQ.png</file>
+        <file>Assets/WR.png</file>
+        <file>Assets/hit.jpg</file>
+        <file>Assets/reach.jpg</file>
+        <file>Assets/Frame 7.png</file>
+        <file>Assets/Black wins.jpg</file>
+        <file>Assets/White wins.jpg</file>
+    </qresource>
+</RCC>
