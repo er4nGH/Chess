@@ -17,6 +17,7 @@
 #include<blackwins.h>
 #include<wpawn.h>
 #include<bpawn.h>
+#include<bishop.h>
 
 using namespace std;
 namespace Ui {
