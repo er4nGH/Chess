@@ -15,6 +15,8 @@
 #include<qalgorithms.h>
 #include<whitewins.h>
 #include<blackwins.h>
+#include<wpawn.h>
+#include<bpawn.h>
 
 using namespace std;
 namespace Ui {
