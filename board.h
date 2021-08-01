@@ -18,6 +18,8 @@
 #include<wpawn.h>
 #include<bpawn.h>
 #include<bishop.h>
+#include <knight.h>
+
 
 using namespace std;
 namespace Ui {
