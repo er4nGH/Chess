@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include "board.h"
-#include "board2.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,6 +25,5 @@ private:
     Ui::MainWindow *ui;
 
     Board Board;
-    Board2 Board2;
 };
 #endif // MAINWINDOW_H
