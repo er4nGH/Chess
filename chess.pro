@@ -25,7 +25,8 @@ SOURCES += \
     whitewins.cpp \
 	wpawn.cpp \
 	bpawn.cpp \
-	bishop.cpp
+	bishop.cpp \
+	knight.cpp
 HEADERS += \
     blackwins.h \
     board.h \
@@ -35,7 +36,9 @@ HEADERS += \
     whitewins.h \
 	wpawn.h \
 	bpawn.h \
-	bishop.h
+	bishop.h \
+	knight.h
+
 FORMS += \
     blackwins.ui \
     board.ui \
