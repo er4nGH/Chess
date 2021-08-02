@@ -19,7 +19,8 @@
 #include<bpawn.h>
 #include<bishop.h>
 #include <knight.h>
-
+#include <queen.h>
+#include <rock.h>
 
 using namespace std;
 namespace Ui {
