@@ -28,7 +28,8 @@ SOURCES += \
 	bishop.cpp \
 	knight.cpp
 	queen.cpp \
-	rock.cpp
+	rock.cpp \
+	king.cpp
 HEADERS += \
     blackwins.h \
     board.h \
@@ -41,7 +42,8 @@ HEADERS += \
 	bishop.h \
 	knight.h \
 	queen.h \
-	rock.h
+	rock.h \
+	king.h
 
 FORMS += \
     blackwins.ui \

@@ -10,17 +10,18 @@
 #include <map>
 #include <QtDebug>
 #include <QtWidgets>
-#include<QMessageBox>
-#include<chessman.h>
-#include<qalgorithms.h>
-#include<whitewins.h>
-#include<blackwins.h>
-#include<wpawn.h>
-#include<bpawn.h>
-#include<bishop.h>
+#include <QMessageBox>
+#include <chessman.h>
+#include <qalgorithms.h>
+#include <whitewins.h>
+#include <blackwins.h>
+#include <wpawn.h>
+#include <bpawn.h>
+#include <bishop.h>
 #include <knight.h>
 #include <queen.h>
 #include <rock.h>
+#include <king.h>
 
 using namespace std;
 namespace Ui {
