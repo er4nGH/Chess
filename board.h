@@ -10,19 +10,18 @@
 #include <map>
 #include <QtDebug>
 #include <QtWidgets>
-#include <QMessageBox>
-#include <chessman.h>
-#include <qalgorithms.h>
-#include <whitewins.h>
-#include <blackwins.h>
-#include <wpawn.h>
-#include <bpawn.h>
-#include <bishop.h>
-#include <knight.h>
-#include <queen.h>
-#include <rock.h>
-#include <king.h>
-
+#include<QMessageBox>
+#include<rock.h>
+#include<knight.h>
+#include<bishop.h>
+#include<queen.h>
+#include<wpawn.h>
+#include<king.h>
+#include<bpawn.h>
+#include<chessman.h>
+#include<qalgorithms.h>
+#include<whitewins.h>
+#include<blackwins.h>
 using namespace std;
 namespace Ui {
 class Board;
@@ -36,9 +35,16 @@ public:
     explicit Board(QWidget *parent = nullptr);
     ~Board();
 
-private:Ui::Board *ui;
+private:
+    Ui::Board *ui;
     void initboard();
     void Docommand();
+    void check();
+    bool is_safe_for_king(QString,QString);
+    bool will_king_remain_safe(QString,QString);
+    bool fcellvalidation(QString);
+    bool scellvalidation(QString);
+    void checkmate();
     bool whitecheck=false;
     bool blackcheck=false;
     QMessageBox msg;
