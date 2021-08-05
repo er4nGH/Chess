@@ -16,38 +16,42 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    bishop.cpp \
     blackwins.cpp \
     board.cpp \
+    board2.cpp \
+    bpawn.cpp \
     cell.cpp \
     chessman.cpp \
+    king.cpp \
+    knight.cpp \
     main.cpp \
     mainwindow.cpp \
+    queen.cpp \
+    rock.cpp \
     whitewins.cpp \
-	wpawn.cpp \
-	bpawn.cpp \
-	bishop.cpp \
-	knight.cpp
-	queen.cpp \
-	rock.cpp \
-	king.cpp
+    wpawn.cpp
+
 HEADERS += \
+    bishop.h \
     blackwins.h \
     board.h \
+    board2.h \
+    bpawn.h \
     cell.h \
     chessman.h \
+    king.h \
+    knight.h \
     mainwindow.h \
+    queen.h \
+    rock.h \
     whitewins.h \
-	wpawn.h \
-	bpawn.h \
-	bishop.h \
-	knight.h \
-	queen.h \
-	rock.h \
-	king.h
+    wpawn.h
 
 FORMS += \
     blackwins.ui \
     board.ui \
+    board2.ui \
     mainwindow.ui \
     whitewins.ui
 
