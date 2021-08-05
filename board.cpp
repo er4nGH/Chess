@@ -155,12 +155,519 @@ void Board::changeicon(QPushButton *firstbt,QPushButton *secbt)
     secbt->setIconSize(QSize(50,50));
     firstbt->setIcon(QIcon());//set first cell icon to nothing
 }
-
-void Board::Docommand()
+bool Board::fcellvalidation(QString s)
 {
-
+    for(auto c:cellstorage)
+    {
+        if(c.getrelatedbutton()==s)
+        {
+            if(whiteturn==true&&c.getcolor()=="W")
+            {
+                return true;
+            }
+            else if(whiteturn==false&&c.getcolor()=="B")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    return false;
 }
 
+bool Board::scellvalidation(QString s)
+{
+    vector<QString>pos;
+    QString temp;
+    QString color;
+    for(auto c:cellstorage)
+    {
+        if(c.getrelatedbutton()==fcell)
+        {
+            temp=c.getpiece();
+            color=c.getcolor();
+            if(temp=="WR"||temp=="BR")
+            {
+                Rock r;
+                pos=r.reachable(cellstorage,c);
+            }
+            else if(temp=="WH"||temp=="BH")
+            {
+                Knight k;
+                pos=k.reachable(cellstorage,c);
+            }
+            else if(temp=="WB"||temp=="BB")
+            {
+                Bishop b;
+                pos=b.reachable(cellstorage,c);
+            }
+            else if(temp=="WQ"||temp=="BQ")
+            {
+                Queen q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="WK"||temp=="BK")
+            {
+                King q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="BP")
+            {
+                Bpawn q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="WP")
+            {
+                Wpawn q;
+                pos=q.reachable(cellstorage,c);
+            }
+        }
+    }
+    bool con=true;
+    if(temp!="WK"&&whitecheck==true)
+    {
+        if(will_king_remain_safe(fcell,s)==true)
+        {
+            con=true;
+        }
+        else
+        {
+            con=false;
+        }
+    }
+    if(temp!="BK"&&blackcheck==true)
+    {
+        if(will_king_remain_safe(fcell,s)==true)
+        {
+            con=true;
+        }
+        else
+        {
+            con=false;
+        }
+    }
+    auto c=std::find(pos.begin(),pos.end(),s);
+    if(c !=pos.end()&&con==true)
+    {
+        if((temp=="WK"||temp=="BK"))
+        {
+            if(is_safe_for_king(s,color)==true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(will_king_remain_safe(fcell,s)==true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+void Board::check()
+{
+    QString wkingbt;
+    QString bkingbt;
+    for(auto c:cellstorage)
+    {
+        if(c.getpiece()=="WK")
+        {
+            wkingbt=c.getrelatedbutton();
+        }
+        if(c.getpiece()=="BK")
+        {
+            bkingbt=c.getrelatedbutton();
+        }
+    }
+    if(is_safe_for_king(wkingbt,"W")==true)
+    {
+        whitecheck=false;
+        ui->label2->setText("ongoing");
+    }
+    else
+    {
+        whitecheck=true;
+    }
+    if(is_safe_for_king(bkingbt,"B")==true)
+    {
+        blackcheck=false;
+        ui->label2->setText("ongoing");
+    }
+    else
+    {
+        blackcheck=true;
+    }
+    if(whitecheck==true)
+    {
+        ui->label2->setText("white checked");
+    }
+    if(blackcheck==true)
+    {
+        ui->label2->setText("black checked");
+    }
+}
+void Board::checkmate()
+{
+    QString color;
+    map<QString,vector<QString>>pieces_and_moves;
+    bool con=true;
+    QString wkingbt;
+    QString bkingbt;
+    for(auto c:cellstorage)
+    {
+        if(c.getpiece()=="WK")
+        {
+            wkingbt=c.getrelatedbutton();
+        }
+        if(c.getpiece()=="BK")
+        {
+            bkingbt=c.getrelatedbutton();
+        }
+    }
+    if(whitecheck==true)
+    {
+        color="W";
+    }
+    if(blackcheck==true)
+    {
+        color="B";
+    }
+    for(auto c:cellstorage)
+    {
+        if(c.getcolor()==color)
+        {
+            QString temp=c.getpiece();
+            vector<QString>pos;
+            QString rb=c.getrelatedbutton();
+            if(temp=="WR"||temp=="BR")
+            {
+                Rock r;
+                pos=r.reachable(cellstorage,c);
+            }
+            else if(temp=="WH"||temp=="BH")
+            {
+                Knight k;
+                pos=k.reachable(cellstorage,c);
+            }
+            else if(temp=="WB"||temp=="BB")
+            {
+                Bishop b;
+                pos=b.reachable(cellstorage,c);
+            }
+            else if(temp=="WQ"||temp=="BQ")
+            {
+                Queen q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="WK"||temp=="BK")
+            {
+                King q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="BP")
+            {
+                Bpawn q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="WP")
+            {
+                Wpawn q;
+                pos=q.reachable(cellstorage,c);
+            }
+            pieces_and_moves.insert({rb,pos});
+        }
+    }
+    for(auto m:pieces_and_moves)
+    {
+        for(auto s:m.second)
+        {
+            if(m.first==wkingbt)
+            {
+                if(is_safe_for_king(s,"W")==true)
+                {
+                    con=false;
+                }
+            }
+            else if(m.first==bkingbt)
+            {
+                if(is_safe_for_king(s,"B")==true)
+                {
+                    con=false;
+                }
+            }
+            else
+            {
+                if(will_king_remain_safe(m.first,s)==true)
+                {
+                    con=false;
+                }
+            }
+        }
+    }
+    if(con==true)
+    {
+        if(whitecheck==true)
+        {
+            ui->label2->setText("Black wins");
+            b.show();
+            this->hide();
+
+        }
+        if(blackcheck==true)
+        {
+            ui->label2->setText("white wins");
+            w.show();
+            this->hide();
+        }
+    }
+}
+bool Board::is_safe_for_king(QString btname,QString color)
+{
+    vector<QString> underattack;
+    int index=0;
+    QString primarypiece;
+    for(int i=0;i<64;i++)
+    {
+        if(cellstorage[i].getrelatedbutton()==btname)
+        {
+            if(color=="B")
+            {
+                primarypiece=cellstorage[i].getpiece();
+                cellstorage[i].setpiece("BK");
+                index=i;
+            }
+            if(color=="W")
+            {
+                primarypiece=cellstorage[i].getpiece();
+                cellstorage[i].setpiece("WK");
+                index=i;
+            }
+        }
+    }
+    for(auto c:cellstorage)
+    {
+        if(c.getpiece()!=""&&c.getcolor()!=color)
+        {
+            vector<QString> pos;
+            QString piece=c.getpiece();
+            if(piece=="WR"||piece=="BR")
+            {
+                Rock r;
+                pos=r.reachable(cellstorage,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+
+            }
+            else if(piece=="WH"||piece=="BH")
+            {
+                Knight k;
+                pos=k.reachable(cellstorage,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WB"||piece=="BB")
+            {
+                Bishop b;
+                pos=b.reachable(cellstorage,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WQ"||piece=="BQ")
+            {
+                Queen q;
+                pos=q.reachable(cellstorage,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WK"||piece=="BK")
+            {
+                King q;
+                pos=q.reachable(cellstorage,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="BP")
+            {
+                Bpawn q;
+                pos=q.reachable(cellstorage,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WP")
+            {
+                Wpawn q;
+                pos=q.reachable(cellstorage,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+        }
+    }
+    cellstorage[index].setpiece(primarypiece);
+    auto f=std::find(underattack.begin(),underattack.end(),btname);
+    if(f==underattack.end())
+    {
+        return true;
+    }
+    else
+    {
+
+        return false;
+    }
+}
+bool Board::will_king_remain_safe(QString fbtname,QString sbtname)
+{
+    QString orginalpiece;
+    QString color;
+    QString kingbt;
+    int firstindex=0;
+    int secondindex=0;
+    for(auto c: cellstorage)
+    {
+        if(c.getrelatedbutton()==fbtname)
+        {
+            orginalpiece=c.getrelatedbutton();
+            color=c.getcolor();
+            firstindex=c.getindex();
+        }
+        if(c.getrelatedbutton()==sbtname)
+        {
+            secondindex=c.getindex();
+        }
+    }
+    vector<Cell> copy;
+    for(auto c:cellstorage)
+    {
+        copy.push_back(c);
+    }
+    copy[firstindex].setpiece("");
+    copy[secondindex].setpiece(orginalpiece);
+    for(auto c:copy)
+    {
+        if(c.getpiece()=="WK"&&color=="W")
+        {
+            kingbt=c.getrelatedbutton();
+        }
+        if(c.getpiece()=="BK"&&color=="B")
+        {
+            kingbt=c.getrelatedbutton();
+        }
+    }
+    vector<QString> underattack;
+    for(auto c:copy)
+    {
+        if(c.getpiece()!=""&&c.getcolor()!=color)
+        {
+            vector<QString> pos;
+            QString piece=c.getpiece();
+            if(piece=="WR"||piece=="BR")
+            {
+                Rock r;
+                pos=r.reachable(copy,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+
+            }
+            else if(piece=="WH"||piece=="BH")
+            {
+                Knight k;
+                pos=k.reachable(copy,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WB"||piece=="BB")
+            {
+                Bishop b;
+                pos=b.reachable(copy,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WQ"||piece=="BQ")
+            {
+                Queen q;
+                pos=q.reachable(copy,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WK"||piece=="BK")
+            {
+                King q;
+                pos=q.reachable(copy,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="BP")
+            {
+                Bpawn q;
+                pos=q.reachable(copy,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+            else if(piece=="WP")
+            {
+                Wpawn q;
+                pos=q.reachable(copy,c);
+                underattack.insert(underattack.end(), pos.begin(), pos.end());
+            }
+        }
+    }
+    auto f=std::find(underattack.begin(),underattack.end(),kingbt);
+    if(f==underattack.end())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+void Board::Docommand()
+{
+    QString piece;
+    for(int i=0;i<64;i++)
+    {
+            if(cellstorage[i].getrelatedbutton()==fcell)
+            {
+                piece=cellstorage[i].getpiece();
+                cellstorage[i].setpiece("");
+            }
+    }
+    for(int i=0;i<64;i++)
+    {
+            if(cellstorage[i].getrelatedbutton()==scell)
+            {
+                cellstorage[i].setpiece(piece);
+            }
+    }
+    QPushButton *button1 = findChild<QPushButton *>(fcell);
+    QPushButton *button2 = findChild<QPushButton *>(scell);
+    changeicon(button1,button2);
+    for(int i=0;i<64;i++)
+    {
+            if(cellstorage[i].getrow()==1 && cellstorage[i].getpiece()=="BP")
+            {
+                cellstorage[i].setpiece("BQ");
+                QPushButton *button = findChild<QPushButton *>(cellstorage[i].getrelatedbutton());
+                button->setIcon(black.Qpath);
+                button->setIconSize(QSize(50,50));
+            }
+            if(cellstorage[i].getrow()==8 && cellstorage[i].getpiece()=="WP")
+            {
+                cellstorage[i].setpiece("WQ");
+                QPushButton *button = findChild<QPushButton *>(cellstorage[i].getrelatedbutton());
+                button->setIcon(white.Qpath);
+                button->setIconSize(QSize(50,50));
+            }
+    }
+    check();
+    if(whitecheck==true||blackcheck==true)
+    {
+        checkmate();
+    }
+}
 void Board::setcommand(QString s)
 {
     if(fcell=="")
