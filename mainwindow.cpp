@@ -25,5 +25,6 @@ void MainWindow::on_Button1_clicked()
 
 void MainWindow::on_Button2_clicked()
 {
+    Board2.show();
     this->hide();
 }
