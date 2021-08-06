@@ -19,6 +19,7 @@ SOURCES += \
     bishop.cpp \
     blackwins.cpp \
     board.cpp \
+	board2.cpp \
     bpawn.cpp \
     cell.cpp \
     chessman.cpp \
@@ -29,7 +30,7 @@ SOURCES += \
     queen.cpp \
     rock.cpp \
     whitewins.cpp \
-    wpawn.cpp
+    wpawn.cpp  
 
 HEADERS += \
     bishop.h \
@@ -50,6 +51,7 @@ HEADERS += \
 FORMS += \
     blackwins.ui \
     board.ui \
+	board2.ui \
     mainwindow.ui \
     whitewins.ui
 
