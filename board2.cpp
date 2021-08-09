@@ -148,6 +148,83 @@ void Board2::initBoard2()
     }
 }
 
+bool Board2::top_right_casteling()
+{
+    if(cellstorage[60].getpiece()=="BK"&&cellstorage[63].getpiece()=="BR"&&cellstorage[62].getpiece()==""&&cellstorage[61].getpiece()=="")
+    {
+        if(is_safe_for_king("G8","B")==true && is_safe_for_king("F8","B")==true&&black_king_moved==false&&black_right_rock_moved==false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+}
+bool Board2::top_left_casteling()
+{
+    if(cellstorage[60].getpiece()=="BK"&&cellstorage[56].getpiece()=="BR"&&cellstorage[57].getpiece()==""&&cellstorage[58].getpiece()==""&&cellstorage[59].getpiece()=="")
+    {
+        if(is_safe_for_king("D8","B")==true && is_safe_for_king("C8","B")==true&&black_king_moved==false&&black_left_rock_moved==false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+}
+bool Board2::down_right_casteling()
+{
+    if(cellstorage[4].getpiece()=="WK"&&cellstorage[7].getpiece()=="WR"&&cellstorage[6].getpiece()==""&&cellstorage[5].getpiece()=="")
+    {
+        if(is_safe_for_king("F1","W")==true && is_safe_for_king("G1","W")==true&&white_king_moved==false&&white_right_rock_moved==false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+}
+bool Board2::down_left_casteling()
+{
+    if(cellstorage[4].getpiece()=="WK"&&cellstorage[0].getpiece()=="WR"&&cellstorage[1].getpiece()==""&&cellstorage[2].getpiece()==""&&cellstorage[3].getpiece()=="")
+    {
+        if(is_safe_for_king("C1","W")==true && is_safe_for_king("D1","W")==true&&white_king_moved==false&&white_left_rock_moved==false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
 void Board2::changeicon(QPushButton *firstbt,QPushButton *secbt)
 {
     secbt->setIcon(firstbt->icon());//change icon
@@ -170,6 +247,7 @@ bool Board2::fcellvalidation(QString s)
             }
             else
             {
+                qDebug()<<"here"<<c.getcolor()<<whiteturn;
                 return false;
             }
         }
@@ -179,6 +257,70 @@ bool Board2::fcellvalidation(QString s)
 
 bool Board2::scellvalidation(QString s)
 {
+    if(fcell=="E8"&&s=="G8")//top right casteling check
+    {
+        if(top_right_casteling()==true)
+        {
+            QPushButton *button1 = findChild<QPushButton *>("H8");//move rock
+            QPushButton *button2 = findChild<QPushButton *>("F8");
+            changeicon(button1,button2);
+            cellstorage[63].setpiece("");
+            cellstorage[61].setpiece("BR");
+            return true;//king will be moved in Docommand
+        }
+        else
+        {
+            return false;
+        }
+    }
+    if(fcell=="E8"&&s=="C8")//top left casteling check
+    {
+        if(top_left_casteling()==true)
+        {
+            QPushButton *button1 = findChild<QPushButton *>("A8");//move rock
+            QPushButton *button2 = findChild<QPushButton *>("D8");
+            changeicon(button1,button2);
+            cellstorage[56].setpiece("");
+            cellstorage[59].setpiece("BR");
+            return true;//king will be moved in Docommand
+        }
+        else
+        {
+            return false;
+        }
+    }
+    if(fcell=="E1"&&s=="G1")//Down right casteling check
+    {
+        if(down_right_casteling()==true)
+        {
+            QPushButton *button1 = findChild<QPushButton *>("H1");//move rock
+            QPushButton *button2 = findChild<QPushButton *>("F1");
+            changeicon(button1,button2);
+            cellstorage[7].setpiece("");
+            cellstorage[5].setpiece("WR");
+            return true;//king will be moved in Docommand
+        }
+        else
+        {
+            return false;
+        }
+    }
+    if(fcell=="E1"&&s=="C1")//Down left casteling check
+    {
+        if(down_left_casteling()==true)
+        {
+            QPushButton *button1 = findChild<QPushButton *>("A1");//move rock
+            QPushButton *button2 = findChild<QPushButton *>("D1");
+            changeicon(button1,button2);
+            cellstorage[0].setpiece("");
+            cellstorage[3].setpiece("WR");
+            return true;//king will be moved in Docommand
+        }
+        else
+        {
+            return false;
+        }
+    }
     vector<QString>pos;
     QString temp;
     QString color;
@@ -312,13 +454,18 @@ void Board2::check()
     {
         blackcheck=true;
     }
+    checkmate();//new
     if(whitecheck==true)
     {
         ui->label2->setText("white checked");
+        blackpoint+=10;//new
+        ui->BP->setText(QString::number(blackpoint));//new
     }
     if(blackcheck==true)
     {
         ui->label2->setText("black checked");
+        whitepoint+=10;//new
+        ui->WP->setText(QString::number(whitepoint));//new
     }
 }
 void Board2::checkmate()
@@ -423,16 +570,47 @@ void Board2::checkmate()
     {
         if(whitecheck==true)
         {
-            ui->label2->setText("Black wins");
-            b.show();
-            this->hide();
-
+            blackpoint+=50;//new
+            if(whitepoint<blackpoint)//new
+            {
+                ui->label2->setText("Black wins");
+                b.show();
+                this->hide();
+            }
+            else if(blackpoint<whitepoint)//new
+            {
+                ui->label2->setText("white wins");
+                w.show();
+                this->hide();
+            }
+            else//new
+            {
+                msg.setText("Draw");
+                msg.exec();
+                this->hide();
+            }
         }
         if(blackcheck==true)
         {
-            ui->label2->setText("white wins");
-            w.show();
-            this->hide();
+            whitepoint+=50;//new
+            if(whitepoint<blackpoint)//new
+            {
+                ui->label2->setText("Black wins");
+                b.show();
+                this->hide();
+            }
+            else if(blackpoint<whitepoint)//new
+            {
+                ui->label2->setText("white wins");
+                w.show();
+                this->hide();
+            }
+            else//new
+            {
+                msg.setText("Draw");
+                msg.exec();
+                this->hide();
+            }
         }
     }
 }
@@ -623,8 +801,388 @@ bool Board2::will_king_remain_safe(QString fbtname,QString sbtname)
     }
 
 }
+
+void Board2::draw()
+{
+    bool white_enough_power=false;
+    bool black_enough_power=false;
+    int white_bishop_knight_count=0; //impossible to win with 1 knight or 1 bishop and possible with
+    int black_bishop_knight_count=0; // 2 knights or 2 bishops or (1 knight and 1 bishop)
+    for(auto c:cellstorage)
+    {
+        if(c.getpiece()=="WB"||c.getpiece()=="WH")
+        {
+            white_bishop_knight_count++;
+        }
+        if(c.getpiece()=="BB"||c.getpiece()=="BH")
+        {
+            black_bishop_knight_count++;
+        }
+        if(c.getpiece()=="BR"||c.getpiece()=="BP"||c.getpiece()=="BQ")
+        {
+            black_enough_power=true;
+        }
+        if(c.getpiece()=="WR"||c.getpiece()=="WP"||c.getpiece()=="WQ")
+        {
+            white_enough_power=true;
+        }
+        if(c.getpiece()=="BR"||c.getpiece()=="BP"||c.getpiece()=="BQ")
+        {
+            black_enough_power=true;
+        }
+    }
+    if(white_enough_power==false&&white_bishop_knight_count>1)
+    {
+        white_enough_power=true;
+    }
+    if(black_enough_power==false&&black_bishop_knight_count>1)
+    {
+        black_enough_power=true;
+    }
+    if(white_enough_power==false&&black_enough_power==false)
+    {
+        msg.setText("Draw");
+        msg.exec();
+        this->hide();
+    }
+}
+void Board2::stalemate_draw()
+{
+    vector<QString>possible;
+    vector<QString>kingmoves;
+    if(whiteturn==false)
+    {
+        for(auto c:cellstorage)
+        {
+            QString temp=c.getpiece();
+            vector<QString>pos;
+            if(temp=="WR")
+            {
+                Rock r;
+                pos=r.reachable(cellstorage,c);
+            }
+            else if(temp=="WH")
+            {
+                Knight k;
+                pos=k.reachable(cellstorage,c);
+            }
+            else if(temp=="WB")
+            {
+                Bishop b;
+                pos=b.reachable(cellstorage,c);
+            }
+            else if(temp=="WQ")
+            {
+                Queen q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="WP")
+            {
+                Wpawn q;
+                pos=q.reachable(cellstorage,c);
+            }
+            possible.insert(possible.end(), pos.begin(), pos.end());
+            if(temp=="WK")
+            {
+                King k;
+                kingmoves=k.reachable(cellstorage,c);
+                for(auto x:kingmoves)
+                {
+                    if(is_safe_for_king(x,"W")==true)
+                    {
+                        possible.push_back(x);
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        for(auto c:cellstorage)
+        {
+            QString temp=c.getpiece();
+            vector<QString>pos;
+            QString rb=c.getrelatedbutton();
+            if(temp=="BR")
+            {
+                Rock r;
+                pos=r.reachable(cellstorage,c);
+            }
+            else if(temp=="BH")
+            {
+                Knight k;
+                pos=k.reachable(cellstorage,c);
+            }
+            else if(temp=="BB")
+            {
+                Bishop b;
+                pos=b.reachable(cellstorage,c);
+            }
+            else if(temp=="BQ")
+            {
+                Queen q;
+                pos=q.reachable(cellstorage,c);
+            }
+            else if(temp=="BP")
+            {
+                Bpawn q;
+                pos=q.reachable(cellstorage,c);
+            }
+            possible.insert(possible.end(), pos.begin(), pos.end());
+            if(temp=="BK")
+            {
+                King k;
+                kingmoves=k.reachable(cellstorage,c);
+                for(auto x:kingmoves)
+                {
+                    if(is_safe_for_king(x,"B")==true)
+                    {
+                        possible.push_back(x);
+                    }
+                }
+            }
+        }
+    }
+    if(possible.size()==0)
+    {
+        msg.setText("Stalemate Draw");
+        msg.exec();
+        this->hide();
+    }
+}
+void Board2::threat()
+{
+    vector<Cell> copy;
+    QString piece;
+    unsigned int index=0;
+    unsigned int point=0;
+    for(auto c:cellstorage)
+    {
+        copy.push_back(c);
+    }
+    for(int i=0;i<64;i++)
+    {
+            if(copy[i].getrelatedbutton()==fcell)
+            {
+                piece=copy[i].getpiece();
+                copy[i].setpiece("");
+            }
+    }
+    for(int i=0;i<64;i++)
+    {
+            if(copy[i].getrelatedbutton()==scell)
+            {
+                index=copy[i].getindex();
+                copy[i].setpiece(piece);
+            }
+    }
+    vector<QString>pos;
+    if(copy[index].getpiece()=="BR"||copy[index].getpiece()=="WR")
+    {
+        Rock r;
+        pos=r.reachable(copy,copy[index]);
+    }
+    else if(copy[index].getpiece()=="BH"||copy[index].getpiece()=="WH")
+    {
+        Knight k;
+        pos=k.reachable(copy,copy[index]);
+    }
+    else if(copy[index].getpiece()=="BB"||copy[index].getpiece()=="WB")
+    {
+        Bishop b;
+        pos=b.reachable(copy,copy[index]);
+    }
+    else if(copy[index].getpiece()=="BQ"||copy[index].getpiece()=="WQ")
+    {
+        Queen q;
+        pos=q.reachable(copy,copy[index]);
+    }
+    else if(copy[index].getpiece()=="BP")
+    {
+        Bpawn q;
+        pos=q.reachable(copy,copy[index]);
+    }
+    else if(copy[index].getpiece()=="WP")
+    {
+        Wpawn q;
+        pos=q.reachable(copy,copy[index]);
+    }
+    for(auto s:pos)
+    {
+        for(auto c:copy)
+        {
+            if(c.getrelatedbutton()==s)
+            {
+                if(c.getpiece()=="")
+                {
+
+                }
+                else if(c.getpiece()=="BK"||c.getpiece()=="WK")
+                {
+
+                }
+                else if(c.getpiece()=="WP"||c.getpiece()=="BP")
+                {
+                    point+=1;
+                }
+                else if(c.getpiece()=="BQ"||c.getpiece()=="WQ")
+                {
+                    point+=5;
+                }
+                else
+                {
+                    point+=2;
+                }
+            }
+        }
+    }
+    if(copy[index].getcolor()=="W")
+    {
+        whitepoint+=point;
+        ui->WP->setText(QString::number(whitepoint));
+    }
+    else
+    {
+        blackpoint+=point;
+        ui->BP->setText(QString::number(blackpoint));
+    }
+
+}
+void Board2::killchessman()
+{
+    for(auto c:cellstorage)//kill enemy chessman point(new)
+    {
+        if(c.getrelatedbutton()==scell)
+        {
+            lastpiece=c.getpiece();
+            if(c.getpiece()=="")
+            {
+
+            }
+            else if(c.getpiece()=="WP"||c.getpiece()=="BP")
+            {
+                if(c.getcolor()=="B")
+                {
+                    whitepoint+=3;
+                }
+                else
+                {
+                    blackpoint+=3;
+                }
+            }
+            else if(c.getpiece()=="WQ"||c.getpiece()=="BQ")
+            {
+                if(c.getcolor()=="B")
+                {
+                    whitepoint+=15;
+                }
+                else
+                {
+                    blackpoint+=15;
+                }
+            }
+            else // piece = bishop or knight
+            {
+                if(c.getcolor()=="B")
+                {
+                    whitepoint+=8;
+                }
+                else
+                {
+                    blackpoint+=8;
+                }
+            }
+
+        }
+    }
+    ui->BP->setText(QString::number(blackpoint));
+    ui->WP->setText(QString::number(whitepoint));
+}
+void Board2::pawnpush()
+{
+    for(auto c:cellstorage)//Pawn push point (new)
+    {
+        if(c.getrelatedbutton()==fcell&&c.getpiece()=="WP")
+        {
+            for(auto s:cellstorage)
+            {
+                if(s.getrelatedbutton()==scell)
+                {
+                    if(s.getrow()>=5)
+                    {
+                        whitepoint+=3;
+                        ui->WP->setText(QString::number(whitepoint));
+                    }
+                }
+            }
+        }
+        if(c.getrelatedbutton()==fcell&&c.getpiece()=="BP")
+        {
+            for(auto s:cellstorage)
+            {
+                if(s.getrelatedbutton()==scell)
+                {
+                    if(s.getrow()<=4)
+                    {
+                        blackpoint+=3;
+                        ui->BP->setText(QString::number(blackpoint));
+                    }
+                }
+            }
+        }
+    }
+}
+void Board2::repeat()
+{
+    if(whiteturn==true&&whitecommands.empty()!=true)
+    {
+        QString lastfcell=command.mid(0,2);
+        QString lastscell=command.mid(2,2);
+        if(lastfcell==whitecommands.back().mid(2,2)&&lastscell==whitecommands.back().mid(0,2))
+        {
+            add_negative_point(2,'W');
+        }
+    }
+    if(whiteturn==false&&blackcommands.empty()!=true)
+    {
+        QString lastfcell=command.mid(0,2);
+        QString lastscell=command.mid(2,2);
+        if(lastfcell==blackcommands.back().mid(2,2)&&lastscell==blackcommands.back().mid(0,2))
+        {
+            add_negative_point(2,'B');
+        }
+    }
+
+}
 void Board2::Docommand()
 {
+    if(fcell=="A1")
+    {
+        white_left_rock_moved=true;
+    }
+    if(fcell=="H1")
+    {
+        white_right_rock_moved=true;
+    }
+    if(fcell=="E1")
+    {
+        white_king_moved=true;
+    }
+    if(fcell=="A8")
+    {
+        black_left_rock_moved=true;
+    }
+    if(fcell=="H8")
+    {
+        black_right_rock_moved=true;
+    }
+    if(fcell=="E8")
+    {
+        black_king_moved=true;
+    }
+    killchessman();//new
+    pawnpush();//new
+    threat();//new
     QString piece;
     for(int i=0;i<64;i++)
     {
@@ -661,11 +1219,16 @@ void Board2::Docommand()
                 button->setIconSize(QSize(50,50));
             }
     }
+    scell="";//new
+    fcell="";//new
     check();
-    if(whitecheck==true||blackcheck==true)
-    {
-        checkmate();
-    }
+   // if(whitecheck==true||blackcheck==true)
+   // {
+        //checkmate();
+  //  }
+    draw();
+    stalemate_draw();
+    repeat();//new
 }
 void Board2::setcommand(QString s)
 {
@@ -677,6 +1240,7 @@ void Board2::setcommand(QString s)
         }
         else
         {
+            qDebug()<<"fcell error";
             msg.setText("invalid Move");
             msg.exec();
         }
@@ -687,31 +1251,209 @@ void Board2::setcommand(QString s)
         {
             scell=s;
             command=fcell+scell;
+            lastcommand=command;//new
             ui->textBrowser->append(command);
             Docommand();
-            scell="";
-            fcell="";
+            if(whiteturn==true)//new
+            {
+                whitecommands.push_back(command);//new
+            }
+            else
+            {
+                blackcommands.push_back(command);//new
+            }
+            //scell="";
+            //fcell="";
             if(whiteturn==true)
             {
                 whiteturn=false;
+                ui->BSmove->setEnabled(true);//new
+                ui->BUNDO->setEnabled(true);//new
+                ui->WUndo->setEnabled(true);//new
                 ui->label->setText("Black turn");
             }
             else
             {
                 whiteturn=true;
+                ui->WSmove->setEnabled(true);//new
+                ui->BUNDO->setEnabled(true);//new
+                ui->WUndo->setEnabled(true);//new
                 ui->label->setText("White turn");
             }
         }
         else
         {
             fcell="";
+            if(whiteturn==true)//new
+            {
+                add_negative_point(1,'W');
+            }
+            else//new
+            {
+                add_negative_point(1,'B');
+            }
             msg.setText("invalid Move");
             msg.exec();
         }
 
     }
 }
+void Board2::add_negative_point(int p, char c)
+{
+    if(c=='W')
+    {
+        white_n_point+=p;
+        ui->WN->setText(QString::number(white_n_point));
+    }
+    else if(c=='B')
+    {
+        black_n_point+=p;
+        ui->BN->setText(QString::number(black_n_point));
+    }
+    random_move();
+}
+void Board2::random_move()
+{
+    if(white_n_point>=15)
+    {
+        add_negative_point(-15,'W');
+        vector<QString>keys;
+        vector<vector<QString>>reach;
+        for(auto c:cellstorage)
+        {
+            vector<QString> pos;
+            QString temp=c.getpiece();
+            if(temp=="")
+            {
 
+            }
+            else if(temp=="WR")
+            {
+                Rock r;
+                pos=r.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="WH")
+            {
+                Knight k;
+                pos=k.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="WB")
+            {
+                Bishop b;
+                pos=b.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="WQ")
+            {
+                Queen q;
+                pos=q.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="WP")
+            {
+                Wpawn q;
+                pos=q.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+        }
+        loop:
+        int keyindex=random(0,keys.size()-1);
+        int reachindex;
+        if(reach[keyindex].size()!=0)
+        {
+            reachindex=random(0,reach[keyindex].size()-1);
+        }
+        else
+        {
+            goto loop;
+        }
+        setcommand(keys[keyindex]);
+        setcommand(reach[keyindex][reachindex]);
+    }
+    if(black_n_point>=15)
+    {
+        add_negative_point(-15,'B');
+        vector<QString>keys;
+        vector<vector<QString>>reach;
+        for(auto c:cellstorage)
+        {
+            vector<QString> pos;
+            QString temp=c.getpiece();
+            if(temp=="")
+            {
+
+            }
+            else if(temp=="BR")
+            {
+                Rock r;
+                pos=r.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="BH")
+            {
+                Knight k;
+                pos=k.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="BB")
+            {
+                Bishop b;
+                pos=b.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="BQ")
+            {
+                Queen q;
+                pos=q.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+            else if(temp=="BP")
+            {
+                Bpawn q;
+                pos=q.reachable(cellstorage,c);
+                keys.push_back(c.getrelatedbutton());
+                reach.push_back(pos);
+            }
+        }
+        loop2:
+        int keyindex=random(0,keys.size()-1);
+        int reachindex;
+        if(reach[keyindex].size()!=0)
+        {
+            reachindex=random(0,reach[keyindex].size()-1);
+        }
+        else
+        {
+            goto loop2;
+        }
+        QString temp;
+        temp=keys[keyindex]+reach[keyindex][reachindex];
+        setcommand(keys[keyindex]);
+        setcommand(reach[keyindex][reachindex]);
+    }
+
+}
+int Board2::random(int min, int max) //range : [min, max]
+{
+   static bool first = true;
+   if (first)
+   {
+      srand( time(NULL) ); //seeding for the first time only!
+      first = false;
+   }
+   return min + rand() % (( max + 1 ) - min);
+}
 void Board2::on_A1_clicked()
 {
     setcommand("A1");
@@ -975,4 +1717,198 @@ void Board2::on_H8_clicked()
 Board2::~Board2()
 {
     delete ui;
+}
+
+
+
+void Board2::on_WSmove_clicked()
+{
+    if(blackcheck==false&&whiteturn==false&&whitepoint>=15)
+    {
+        whitepoint-=15;
+        whiteturn=true;
+        ui->WP->setText(QString::number(whitepoint));
+        ui->label->setText("white turn");
+        ui->WSmove->setEnabled(false);
+    }
+    else
+    {
+        msg.setText("you cant do this");
+        msg.exec();
+    }
+}
+
+void Board2::on_BSmove_clicked()
+{
+    if(whitecheck==false&&whiteturn==true&&blackpoint>=15)
+    {
+        blackpoint-=15;
+        whiteturn=false;
+        ui->BP->setText(QString::number(blackpoint));
+        ui->label->setText("black turn");
+        ui->BSmove->setEnabled(false);
+    }
+    else
+    {
+        msg.setText("you cant do this");
+        msg.exec();
+    }
+}
+
+void Board2::on_BUNDO_clicked()
+{
+    if(whiteturn==true)
+    {
+        if(lastpiece=="F")
+        {
+            msg.setText("nothing moved yet");
+            msg.exec();
+        }
+        else
+        {
+            QString lastfcell=blackcommands.back().mid(0,2);
+            QString lastscell=blackcommands.back().mid(2,2);
+            QString piece;
+            for(int i=0;i<64;i++)
+            {
+                    if(cellstorage[i].getrelatedbutton()==lastscell)
+                    {
+                        piece=cellstorage[i].getpiece();
+                        cellstorage[i].setpiece(lastpiece);
+                    }
+            }
+            for(int i=0;i<64;i++)
+            {
+                    if(cellstorage[i].getrelatedbutton()==lastfcell)
+                    {
+                        cellstorage[i].setpiece(piece);
+                    }
+            }
+            QPushButton *button1 = findChild<QPushButton *>(lastscell);
+            QPushButton *button2 = findChild<QPushButton *>(lastfcell);
+            changeicon(button1,button2);
+            if(lastpiece=="WR")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(white.Rpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="WH")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(white.Hpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="WB")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(white.Bpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="WQ")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(white.Qpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="WP")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(white.Ppath);
+                button->setIconSize(QSize(50,50));
+            }
+            whiteturn=false;
+            ui->label->setText("Black turn");
+            add_negative_point(5,'B');
+            ui->BUNDO->setEnabled(false);
+            ui->WUndo->setEnabled(false);
+            ui->WSmove->setEnabled(false);
+            fcell="";
+            scell="";
+        }
+    }
+    else
+    {
+        msg.setText("you cant do this now");
+        msg.exec();
+    }
+}
+
+void Board2::on_WUndo_clicked()
+{
+    if(whiteturn==false)
+    {
+        if(lastpiece=="F")
+        {
+            msg.setText("nothing moved yet");
+            msg.exec();
+        }
+        else
+        {
+            QString lastfcell=whitecommands.back().mid(0,2);
+            QString lastscell=whitecommands.back().mid(2,2);
+            QString piece;
+            for(int i=0;i<64;i++)
+            {
+                    if(cellstorage[i].getrelatedbutton()==lastscell)
+                    {
+                        piece=cellstorage[i].getpiece();
+                        cellstorage[i].setpiece(lastpiece);
+                    }
+            }
+            for(int i=0;i<64;i++)
+            {
+                    if(cellstorage[i].getrelatedbutton()==lastfcell)
+                    {
+                        cellstorage[i].setpiece(piece);
+                    }
+            }
+            QPushButton *button1 = findChild<QPushButton *>(lastscell);
+            QPushButton *button2 = findChild<QPushButton *>(lastfcell);
+            changeicon(button1,button2);
+            if(lastpiece=="BR")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(black.Rpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="BH")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(black.Hpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="BB")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(black.Bpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="BQ")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(black.Qpath);
+                button->setIconSize(QSize(50,50));
+            }
+            else if(lastpiece=="BP")
+            {
+                QPushButton *button = findChild<QPushButton *>(lastscell);
+                button->setIcon(black.Ppath);
+                button->setIconSize(QSize(50,50));
+            }
+            whiteturn=true;
+            ui->label->setText("white turn");
+            add_negative_point(5,'W'); 
+            ui->WUndo->setEnabled(false);
+            ui->BUNDO->setEnabled(false);
+            ui->BSmove->setEnabled(false);
+            fcell="";
+            scell="";
+        }
+    }
+    else
+    {
+        msg.setText("you cant do this now");
+        msg.exec();
+    }
 }
