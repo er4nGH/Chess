@@ -22,6 +22,10 @@
 #include<qalgorithms.h>
 #include<whitewins.h>
 #include<blackwins.h>
+#include <random>//new
+#include<algorithm>//new
+#include<ctime>//new
+#include<cstdlib>//new
 using namespace std;
 namespace Ui {
 class Board2;
@@ -40,17 +44,44 @@ private:
     void initBoard2();
     void Docommand();
     void check();
+    void draw();
+    void stalemate_draw();
     bool is_safe_for_king(QString,QString);
     bool will_king_remain_safe(QString,QString);
     bool fcellvalidation(QString);
     bool scellvalidation(QString);
+    bool top_right_casteling();
+    bool top_left_casteling();
+    bool down_right_casteling();
+    bool down_left_casteling();
     void checkmate();
+    void killchessman();//new
+    void pawnpush();//new
+    void threat();//new
+    bool white_left_rock_moved=false;
+    bool white_right_rock_moved=false;
+    bool white_king_moved=false;
+    bool black_left_rock_moved=false;
+    bool black_right_rock_moved=false;
+    bool black_king_moved=false;
     bool whitecheck=false;
     bool blackcheck=false;
     QMessageBox msg;
     void setcommand(QString);
     void changeicon(QPushButton *,QPushButton *);
     vector<Cell> cellstorage;
+    void add_negative_point(int,char);
+    void random_move();
+    unsigned int blackpoint=0;//new
+    unsigned int whitepoint=0;//new
+    unsigned int black_n_point=0;//new
+    unsigned int white_n_point=0;//new
+    QString lastpiece="F";//="F" to realize that the first move must be done(new)
+    vector<QString> whitecommands;//new
+    vector<QString> blackcommands;//new
+    int random(int,int);//new
+    void repeat();//new
+    QString lastcommand;
     Whitewins w;
     blackwins b;
     struct paths{
@@ -140,6 +171,10 @@ private slots:
     void on_H7_clicked();
     void on_H8_clicked();
 
+    void on_WSmove_clicked();
+    void on_BSmove_clicked();
+    void on_BUNDO_clicked();
+    void on_WUndo_clicked();
 };
 
 
