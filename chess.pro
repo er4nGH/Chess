@@ -15,45 +15,48 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += \
+        ./include
+		
 SOURCES += \
-    bishop.cpp \
-    blackwins.cpp \
-    board.cpp \
-    board2.cpp \
-    bpawn.cpp \
-    cell.cpp \
-    chessman.cpp \
-    king.cpp \
-    knight.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    queen.cpp \
-    rock.cpp \
-    whitewins.cpp \
-    wpawn.cpp
+    source/bishop.cpp \
+    source/blackwins.cpp \
+    source/board.cpp \
+    source/board2.cpp \
+    source/bpawn.cpp \
+    source/cell.cpp \
+    source/chessman.cpp \
+    source/king.cpp \
+    source/knight.cpp \
+    source/main.cpp \
+    source/mainwindow.cpp \
+    source/queen.cpp \
+    source/rock.cpp \
+    source/whitewins.cpp \
+    source/wpawn.cpp
 
 HEADERS += \
-    bishop.h \
-    blackwins.h \
-    board.h \
-    board2.h \
-    bpawn.h \
-    cell.h \
-    chessman.h \
-    king.h \
-    knight.h \
-    mainwindow.h \
-    queen.h \
-    rock.h \
-    whitewins.h \
-    wpawn.h
+    include/bishop.h \
+    include/blackwins.h \
+    include/board.h \
+    include/board2.h \
+    include/bpawn.h \
+    include/cell.h \
+    include/chessman.h \
+    include/king.h \
+    include/knight.h \
+    include/mainwindow.h \
+    include/queen.h \
+    include/rock.h \
+    include/whitewins.h \
+    include/wpawn.h
 
 FORMS += \
-    blackwins.ui \
-    board.ui \
-    board2.ui \
-    mainwindow.ui \
-    whitewins.ui
+    ui/blackwins.ui \
+    ui/board.ui \
+    ui/board2.ui \
+    ui/mainwindow.ui \
+    ui/whitewins.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
